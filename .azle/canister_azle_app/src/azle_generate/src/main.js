@@ -11,7 +11,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.isValidUUID = exports.deleteEmployee = exports.getEmployee = exports.getEmployees = exports.updateEmployee = exports.fireEmployee = exports.hireEmployee = exports.searchEmployees = exports.Principal = void 0;
+exports.isValidUUID = exports.increaseSalary = exports.demoteEmployee = exports.promoteEmployee = exports.deleteEmployee = exports.getEmployee = exports.getEmployees = exports.updateEmployee = exports.fireEmployee = exports.hireEmployee = exports.searchEmployees = exports.Principal = void 0;
 function _defineProperty(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -1253,6 +1253,45 @@ function deleteEmployee(id) {
     }
 }
 exports.deleteEmployee = deleteEmployee;
+function promoteEmployee(id) {
+    return match(employeeStorage.get(id), {
+        Some: (employee)=>{
+            const promotedEmployee = _objectSpread({}, employee, {
+                position: `Senior ${employee.position}`
+            });
+            employeeStorage.insert(id, promotedEmployee);
+            return Result.Ok(promotedEmployee);
+        },
+        None: ()=>Result.Err(`Employee with id=${id} not found`)
+    });
+}
+exports.promoteEmployee = promoteEmployee;
+function demoteEmployee(id) {
+    return match(employeeStorage.get(id), {
+        Some: (employee)=>{
+            const demotedEmployee = _objectSpread({}, employee, {
+                position: employee.position.replace(/^Senior /, "")
+            });
+            employeeStorage.insert(id, demotedEmployee);
+            return Result.Ok(demotedEmployee);
+        },
+        None: ()=>Result.Err(`Employee with id=${id} not found`)
+    });
+}
+exports.demoteEmployee = demoteEmployee;
+function increaseSalary(id, amount) {
+    return match(employeeStorage.get(id), {
+        Some: (employee)=>{
+            const increasedSalaryEmployee = _objectSpread({}, employee, {
+                salary: employee.salary + amount
+            });
+            employeeStorage.insert(id, increasedSalaryEmployee);
+            return Result.Ok(increasedSalaryEmployee);
+        },
+        None: ()=>Result.Err(`Employee with id=${id} not found`)
+    });
+}
+exports.increaseSalary = increaseSalary;
 function isValidUUID(id) {
     return /^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(id);
 }

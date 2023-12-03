@@ -146,6 +146,48 @@ export function deleteEmployee(id: string): Result<Opt<Employee>, string> {
     }
 }
 
+$update
+export function promoteEmployee(id: string): Result<Employee, string> {
+    return match(employeeStorage.get(id), {
+        Some: (employee) => {
+            // Assuming a simple promotion by adding "Senior " to the position
+            const promotedEmployee: Employee = { ...employee, position: `Senior ${employee.position}` };
+            employeeStorage.insert(id, promotedEmployee);
+
+            return Result.Ok(promotedEmployee);
+        },
+        None: () => Result.Err<Employee, string>(`Employee with id=${id} not found`),
+    }) as Result<Employee, string>;
+}
+
+$update
+export function demoteEmployee(id: string): Result<Employee, string> {
+    return match(employeeStorage.get(id), {
+        Some: (employee) => {
+            // Assuming a simple demotion by removing "Senior " from the position
+            const demotedEmployee: Employee = { ...employee, position: employee.position.replace(/^Senior /, '') };
+            employeeStorage.insert(id, demotedEmployee);
+
+            return Result.Ok(demotedEmployee);
+        },
+        None: () => Result.Err<Employee, string>(`Employee with id=${id} not found`),
+    }) as Result<Employee, string>;
+}
+
+$update
+export function increaseSalary(id: string, amount: number): Result<Employee, string> {
+    return match(employeeStorage.get(id), {
+        Some: (employee) => {
+            // Increase the salary by the specified amount
+            const increasedSalaryEmployee: Employee = { ...employee, salary: employee.salary + amount };
+            employeeStorage.insert(id, increasedSalaryEmployee);
+
+            return Result.Ok(increasedSalaryEmployee);
+        },
+        None: () => Result.Err<Employee, string>(`Employee with id=${id} not found`),
+    }) as Result<Employee, string>;
+}
+
 export function isValidUUID(id: string): boolean {
     return /^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(id);
 }

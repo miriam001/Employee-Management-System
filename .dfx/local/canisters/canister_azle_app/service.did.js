@@ -20,10 +20,13 @@ export const idlFactory = ({ IDL }) => {
   });
   return IDL.Service({
     'deleteEmployee' : IDL.Func([IDL.Text], [_AzleResult], []),
+    'demoteEmployee' : IDL.Func([IDL.Text], [_AzleResult_1], []),
     'fireEmployee' : IDL.Func([IDL.Text], [_AzleResult_1], []),
     'getEmployee' : IDL.Func([IDL.Text], [_AzleResult_1], ['query']),
     'getEmployees' : IDL.Func([], [_AzleResult_2], ['query']),
     'hireEmployee' : IDL.Func([Employee], [_AzleResult_1], []),
+    'increaseSalary' : IDL.Func([IDL.Text, IDL.Float64], [_AzleResult_1], []),
+    'promoteEmployee' : IDL.Func([IDL.Text], [_AzleResult_1], []),
     'searchEmployees' : IDL.Func([IDL.Text], [_AzleResult_2], ['query']),
     'updateEmployee' : IDL.Func([IDL.Text, Employee], [_AzleResult_1], []),
   });

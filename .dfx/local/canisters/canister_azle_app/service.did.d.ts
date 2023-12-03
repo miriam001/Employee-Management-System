@@ -19,10 +19,13 @@ export type _AzleResult_2 = { 'Ok' : Array<Employee> } |
   { 'Err' : string };
 export interface _SERVICE {
   'deleteEmployee' : ActorMethod<[string], _AzleResult>,
+  'demoteEmployee' : ActorMethod<[string], _AzleResult_1>,
   'fireEmployee' : ActorMethod<[string], _AzleResult_1>,
   'getEmployee' : ActorMethod<[string], _AzleResult_1>,
   'getEmployees' : ActorMethod<[], _AzleResult_2>,
   'hireEmployee' : ActorMethod<[Employee], _AzleResult_1>,
+  'increaseSalary' : ActorMethod<[string, number], _AzleResult_1>,
+  'promoteEmployee' : ActorMethod<[string], _AzleResult_1>,
   'searchEmployees' : ActorMethod<[string], _AzleResult_2>,
   'updateEmployee' : ActorMethod<[string, Employee], _AzleResult_1>,
 }
