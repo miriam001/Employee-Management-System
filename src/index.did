@@ -2,7 +2,15 @@ type Employee = record {
   id : text;
   isEmployed : bool;
   salary : float64;
+  employer_principal : principal;
   updatedAt : opt nat64;
+  department : text;
+  position : text;
+  lastName : text;
+  firstName : text;
+};
+type EmployeePayload = record {
+  salary : float64;
   department : text;
   position : text;
   lastName : text;
@@ -17,9 +25,9 @@ service : () -> {
   fireEmployee : (text) -> (_AzleResult_1);
   getEmployee : (text) -> (_AzleResult_1) query;
   getEmployees : () -> (_AzleResult_2) query;
-  hireEmployee : (Employee) -> (_AzleResult_1);
+  hireEmployee : (EmployeePayload) -> (_AzleResult_1);
   increaseSalary : (text, float64) -> (_AzleResult_1);
   promoteEmployee : (text) -> (_AzleResult_1);
   searchEmployees : (text) -> (_AzleResult_2) query;
-  updateEmployee : (text, Employee) -> (_AzleResult_1);
+  updateEmployee : (text, EmployeePayload) -> (_AzleResult_1);
 }
