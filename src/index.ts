@@ -24,7 +24,7 @@ type Employee = Record<{
 }>;
 const employeeStorage = new StableBTreeMap<string, Employee>(0, 44, 1024);
 
-$query
+// $query
 export function searchEmployees(query: string): Result<Vec<Employee>, string> {
     try {
         const lowerCaseQuery = query.toLowerCase();
@@ -41,7 +41,7 @@ export function searchEmployees(query: string): Result<Vec<Employee>, string> {
     }
 }
 
-$update
+// $update
 export function hireEmployee(employee: Employee): Result<Employee, string> {
     try {
         // Generate a unique ID for the employee
@@ -50,7 +50,7 @@ export function hireEmployee(employee: Employee): Result<Employee, string> {
         employee.isEmployed = true;
 
         // Validate the employee object
-        if (!employee.firstName || !employee.lastName || !employee.position || !employee.department || !employee.salary) {
+        if (!employee.firstName.trim() || !employee.lastName.trim() || !employee.position.trim() || !employee.department.trim() || !employee.salary) {
             return Result.Err('Missing required fields in the employee object');
         }
 
@@ -66,7 +66,7 @@ export function hireEmployee(employee: Employee): Result<Employee, string> {
     }
 }
 
-$update
+// $update
 export function fireEmployee(id: string): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (employee) => {
@@ -83,12 +83,12 @@ export function fireEmployee(id: string): Result<Employee, string> {
     }) as Result<Employee, string>;
 }
 
-$update
+// $update
 export function updateEmployee(id: string, employee: Employee): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (existingEmployee) => {
             // Validate the updated employee object
-            if (!employee.firstName || !employee.lastName || !employee.position || !employee.department || !employee.salary) {
+            if (!employee.firstName.trim() || !employee.lastName.trim() || !employee.position.trim() || !employee.department.trim() || !employee.salary) {
                 return Result.Err('Missing required fields in the employee object');
             }
 
@@ -108,7 +108,7 @@ export function updateEmployee(id: string, employee: Employee): Result<Employee,
     }) as Result<Employee, string>;
 }
 
-$query
+// $query
 export function getEmployees(): Result<Vec<Employee>, string> {
     try {
         const employees = employeeStorage.values();
@@ -118,7 +118,7 @@ export function getEmployees(): Result<Vec<Employee>, string> {
     }
 }
 
-$query
+// $query
 export function getEmployee(id: string): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (employee) => Result.Ok<Employee, string>(employee),
@@ -126,7 +126,7 @@ export function getEmployee(id: string): Result<Employee, string> {
     }) as Result<Employee, string>;
 }
 
-$update
+// $update
 export function deleteEmployee(id: string): Result<Opt<Employee>, string> {
     try {
         // Validate the id parameter
@@ -146,10 +146,14 @@ export function deleteEmployee(id: string): Result<Opt<Employee>, string> {
     }
 }
 
-$update
+// $update
 export function promoteEmployee(id: string): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (employee) => {
+            if (employee.position.startsWith("Senior ")) {
+                return Result.Err<Employee, string>(`Employee with id=${id} is already promoted`);
+            }
+
             // Assuming a simple promotion by adding "Senior " to the position
             const promotedEmployee: Employee = { ...employee, position: `Senior ${employee.position}` };
             employeeStorage.insert(id, promotedEmployee);
@@ -160,10 +164,14 @@ export function promoteEmployee(id: string): Result<Employee, string> {
     }) as Result<Employee, string>;
 }
 
-$update
+// $update
 export function demoteEmployee(id: string): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (employee) => {
+            if (!employee.position.startsWith("Senior ")) {
+                return Result.Err<Employee, string>(`Employee with id=${id} is not promoted`);
+            }
+
             // Assuming a simple demotion by removing "Senior " from the position
             const demotedEmployee: Employee = { ...employee, position: employee.position.replace(/^Senior /, '') };
             employeeStorage.insert(id, demotedEmployee);
@@ -174,7 +182,7 @@ export function demoteEmployee(id: string): Result<Employee, string> {
     }) as Result<Employee, string>;
 }
 
-$update
+// $update
 export function increaseSalary(id: string, amount: number): Result<Employee, string> {
     return match(employeeStorage.get(id), {
         Some: (employee) => {
